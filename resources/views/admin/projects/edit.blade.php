@@ -33,11 +33,16 @@
 
 					<div>
 						<p>Tecnologie:</p>
-						@foreach ($technologies as $technology)
-							<input class="form-check-control " id="technology-{{ $technology->id }}" name="technologies[]" type="checkbox"
-								value="{{ $technology->id }}">
-							<label for="technology-{{ $technology->id }}" class="me-2">{{ $technology->label }}</label>
-						@endforeach
+						<div class="d-flex w-75 justify-content-between">
+							@foreach ($technologies as $technology)
+								<div>
+
+									<label for="technology-{{ $technology->id }}" class="">{{ $technology->label }}</label>
+									<input class="form-check-control me-3" id="technology-{{ $technology->id }}" name="technologies[]"
+										type="checkbox" value="{{ $technology->id }}" @if (in_array($technology->id, old('technologies', $project_technologies ?? []))) checked @endif>
+								</div>
+							@endforeach
+						</div>
 					</div>
 
 					<div class="mt-4">
