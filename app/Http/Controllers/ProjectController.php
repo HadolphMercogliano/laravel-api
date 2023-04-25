@@ -52,7 +52,8 @@ class ProjectController extends Controller
         $project = new Project;        
         $project->fill($data);
         $project->save();
-
+        if(Arr::exists($data, "technologies")) $project->technologies()->attach($data["technologies"]);
+        
         return to_route('admin.projects.show', $project)
                 ->with('message_type', 'alert-success')
                 ->with('message_content', 'Progetto aggiunto correttamente');
@@ -73,8 +74,7 @@ class ProjectController extends Controller
     {
       $types = Type::all();
       $technologies = Technology::all();
-
-      return view('admin.projects.edit', compact('project', 'types', 'technologies'));
+      return view('admin.projects.edit', compact('project', 'types', 'technologies',));
     }
 
     /**
@@ -90,8 +90,11 @@ class ProjectController extends Controller
           $path = Storage::put('projectImages', $data['link']);
           $data['link'] = $path;
       }
-      // $project->technologies()->sync($data['technologies']);
       $project->update($data);
+      if(Arr::exists($data, "technologies"))
+      $project->technologies()->sync($data['technologies']);
+      else
+      $project->technologies()->detach();
       // dd($data);    
       
       return redirect()->route('admin.projects.show', $project)
@@ -106,7 +109,9 @@ class ProjectController extends Controller
     {
       $project_id = $project->id;
 
+      $project->technologies()->detach();
       $project->delete();
+
       return to_route('admin.projects.index')
             ->with('message_type', 'alert-danger')
             ->with('message_content', "Progetto $project_id spostato nel cestino");
@@ -175,6 +180,7 @@ class ProjectController extends Controller
           'link.mimes' => 'le estenzioni dei file accettate sono: jpg, png, jpeg.',
           'is_published.boolean' => 'Il valore deve essere un booleano',
           'type_id.exists' => 'Il valore nel tipo non è valido',
+
           'technologies.exists' => 'Il tipo di tecnologia selezionata non esiste'
         ]
         )->validate();

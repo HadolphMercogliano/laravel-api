@@ -4,7 +4,7 @@
 		<h2 class="fs-4 text-secondary my-4">
 			{{ __('Progetti Publicati') }}
 		</h2>
-		<div class="row mb-4 justify-content-center">
+		<div class="row mb-4 g-3 justify-content-center">
 			@foreach ($published_projects as $project)
 				<div class="col-4">
 					<div class="card h-100">

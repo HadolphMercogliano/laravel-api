@@ -13,7 +13,7 @@
 
 @section('content')
 	<div class="container">
-		@dump($project);
+		{{-- @dump($project); --}}
 
 		<div class="row justify-content-center align-items-center mb-3">
 			<div class="card col-8 p-3">
