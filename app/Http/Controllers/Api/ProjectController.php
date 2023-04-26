@@ -38,7 +38,11 @@ class ProjectController extends Controller
      */
     public function show(string $id)
     {
-        //
+      $project = Project::where('id', $id)
+          ->with('type', 'technologies')->first();
+      $project->link = $project->getLinkUri();
+      if(!$project) return response(null. 404);
+      return response()->json($project);
     }
 
     /**
