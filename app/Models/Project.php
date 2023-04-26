@@ -29,6 +29,6 @@ class Project extends Model
     }
 
     public function getLinkUri() {
-     return $this->link ? asset('storage/' . $this->link) : 'https://scheepvaartwinkel.com/wp-content/uploads/2021/01/placeholder.png';
+     return $this->link ? url('storage/' . $this->link) : 'https://scheepvaartwinkel.com/wp-content/uploads/2021/01/placeholder.png';
     } 		
 }

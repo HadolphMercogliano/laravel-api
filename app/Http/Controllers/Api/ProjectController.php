@@ -17,7 +17,11 @@ class ProjectController extends Controller
       $projects = Project::where('is_published', true)
           ->with('type', 'technologies')
           ->orderBy( 'updated_at','DESC')->paginate(6);
-      
+
+      foreach ($projects as $project) {
+      $project->link = $project->getLinkUri();
+      }
+
       return response()->json($projects);
     }
 
