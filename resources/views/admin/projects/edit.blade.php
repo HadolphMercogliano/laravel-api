@@ -47,8 +47,9 @@
 
 					<div class="mt-4">
 						<label for="is_published">Published</label>
-						<input type="checkbox" name="is_published" id="is_published" class="form-check-input mb-3"
-							@checked(old('is_published', $project->is_published)) value="1" />
+
+						<input type="checkbox" name="is_published" id="is_published" class="form-check-control mb-3"
+							@checked(old('is_published', $project->is_published)) value="1">
 					</div>
 
 					<div class="row align-items-center">

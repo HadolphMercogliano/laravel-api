@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\PublishedProjectMail;
 use App\Models\Project;
 use App\Models\Technology;
 use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -48,11 +51,16 @@ class ProjectController extends Controller
           $path = Storage::put('projectImages', $data['link']);
           $data['link'] = $path;
         }
-
+        
+        
         $project = new Project;        
         $project->fill($data);
         $project->save();
         if(Arr::exists($data, "technologies")) $project->technologies()->attach($data["technologies"]);
+        
+        $mail = new PublishedProjectMail($project);
+        $user_email = Auth::user()->email;
+        Mail::to($user_email)->send($mail);
         
         return to_route('admin.projects.show', $project)
                 ->with('message_type', 'alert-success')
@@ -91,12 +99,20 @@ class ProjectController extends Controller
           $path = Storage::put('projectImages', $data['link']);
           $data['link'] = $path;
       }
+
+      
       $project->update($data);
+      
+      $mail = new PublishedProjectMail($project);
+        $user_email = Auth::user()->email;
+        Mail::to($user_email)->send($mail);
+
       if(Arr::exists($data, "technologies"))
       $project->technologies()->sync($data['technologies']);
       else
       $project->technologies()->detach();
-      // dd($data);    
+      
+      
       
       return redirect()->route('admin.projects.show', $project)
             ->with('message_type', 'alert-success')
@@ -165,7 +181,7 @@ class ProjectController extends Controller
         [
           'title' =>'required|string',
           'description' =>'required|string',
-          'link' =>'image|mimes: jpg,png, jpeg',
+          'link' =>'image|mimes: jpg, png, jpeg',
           'is_published' =>'boolean',
           'type_id' => 'nullable|exists:types,id',
           'technologies' => 'nullable|exists:technologies,id'
