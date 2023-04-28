@@ -93,6 +93,9 @@ class ProjectController extends Controller
     {
       // @dd($request->all());
       $data = $this->validation($request->all());
+      if (!$request->is_published) {
+        $data['is_published'] = 0;
+      }
 
       if(Arr::exists($data, 'link')) {
         if($project->link) Storage::delete($project->link);
@@ -100,9 +103,9 @@ class ProjectController extends Controller
           $data['link'] = $path;
       }
 
+
       
       $project->update($data);
-      
       $mail = new PublishedProjectMail($project);
         $user_email = Auth::user()->email;
         Mail::to($user_email)->send($mail);
