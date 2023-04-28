@@ -15,7 +15,7 @@ class PublishedProjectMail extends Mailable
     use Queueable, SerializesModels;
 
     protected $project;
-
+    
 
     /**
      * Create a new message instance.
@@ -30,8 +30,12 @@ class PublishedProjectMail extends Mailable
      */
     public function envelope(): Envelope
     {
+
+      $is_published = $this->project->is_published ? "pubblicato" : "rimosso";
+
         return new Envelope(
-            subject: 'Published Project',
+          subject: $this->project->title . ' ' . $is_published .' correttamente',
+          
         );
     }
 
@@ -40,9 +44,10 @@ class PublishedProjectMail extends Mailable
      */
     public function content(): Content
     {
-
+      
       $project = $this->project;
-      $is_published =$project->is_published ? "Progetto online" : "Progetto rimosso";
+      $is_published =$project->is_published ? "pubblicato" : "rimosso";
+      
 
         return new Content(
             view: 'mails.projects.published',

@@ -17,27 +17,30 @@
 
 		<div class="row justify-content-center align-items-center mb-3">
 			<div class="card col-8 p-3">
-				<div class="card-body d-flex justify-content-between align-items-center">
-					<div class="">
 
-						<h3 class="card-title mb-4 ">Titolo: {{ $project->title }}</h3>
-						<p class="card-text mb-4 "><strong>Tipologia:</strong> <span class="badge rounded-pill"
-								style="background-color:{{ $project->type?->color }} ">{{ $project->type?->label }}</span>
-						</p>
-
-						<div class="d-flex align-items-center">
-							<p class="card-text m-0 p-0 me-3 "><strong>Tecnologie:</strong></p>
-							@foreach ($project->technologies as $technology)
-								<span class="badge rounded-pill me-2"
-									style="background-color:{{ $technology->color }} ">{{ $technology->label }}</span>
-							@endforeach
-						</div>
-
-						<p class="">Descrizione: {{ $project->description }}</p>
-					</div>
-					<img class="img-fluid col-4 mb-3" src="{{ $project->getLinkUri() }}" alt="{{ $project->title }}">
+				<div class=" row d-flex justify-content-between">
+					<h3 class="col-md-6 col-12 card-title mb-4 ">Titolo: <br> {{ $project->title }}</h3>
+					<img class="img-fluid col-12 col-md-6 mb-3" src="{{ $project->getLinkUri() }}" alt="{{ $project->title }}">
 				</div>
-				<a href="{{ route('admin.projects.edit', $project) }}" class=" btn btn-primary"> Modifica progetto</a>
+
+				<p class="card-text mb-4 "><strong>Tipologia:</strong> <br> <span class="badge rounded-pill"
+						style="background-color:{{ $project->type?->color }} ">{{ $project->type?->label }}</span>
+				</p>
+
+				<div class="d-flex align-items-center">
+					<p class="card-text m-0 mb-3 p-0 me-3 "><strong>Tecnologie:</strong><br>
+
+						@foreach ($project->technologies as $technology)
+							<span class="badge rounded-pill me-2"
+								style="background-color:{{ $technology->color }} ">{{ $technology->label }}</span>
+						@endforeach
+					</p>
+				</div>
+
+				<p class=""><strong>Descrizione: <br></strong> {{ $project->description }}</p>
+
+				<a href="{{ route('admin.projects.edit', $project) }}" class="btn btn-primary w-75 align-self-center"> Modifica
+					progetto</a>
 			</div>
 		</div>
 	</div>

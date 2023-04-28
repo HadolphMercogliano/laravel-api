@@ -58,9 +58,11 @@ class ProjectController extends Controller
         $project->save();
         if(Arr::exists($data, "technologies")) $project->technologies()->attach($data["technologies"]);
         
-        $mail = new PublishedProjectMail($project);
-        $user_email = Auth::user()->email;
-        Mail::to($user_email)->send($mail);
+        if($project->is_published){
+          $mail = new PublishedProjectMail($project);
+          $user_email = Auth::user()->email;
+          Mail::to($user_email)->send($mail);
+        }
         
         return to_route('admin.projects.show', $project)
                 ->with('message_type', 'alert-success')
@@ -91,7 +93,7 @@ class ProjectController extends Controller
      */
     public function update(Request $request, Project $project)
     {
-      // @dd($request->all());
+      $initial_state = $project->is_published;
       $data = $this->validation($request->all());
       if (!$request->is_published) {
         $data['is_published'] = 0;
@@ -106,9 +108,12 @@ class ProjectController extends Controller
 
       
       $project->update($data);
-      $mail = new PublishedProjectMail($project);
+      
+      if($initial_state != $project->is_published) {
+        $mail = new PublishedProjectMail($project);
         $user_email = Auth::user()->email;
         Mail::to($user_email)->send($mail);
+      }
 
       if(Arr::exists($data, "technologies"))
       $project->technologies()->sync($data['technologies']);
