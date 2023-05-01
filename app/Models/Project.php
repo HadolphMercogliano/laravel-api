@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,11 +26,15 @@ class Project extends Model
         return $this->belongsToMany(Technology::class); 
       }
     // MUTATORS
+
      public function getAbstract($max = 40) {
       return substr($this->description, 0 , $max) . '...';
     }
 
     public function getLinkUri() {
      return $this->link ? url('storage/' . $this->link) : 'https://scheepvaartwinkel.com/wp-content/uploads/2021/01/placeholder.png';
-    } 		
+    }
+    public function getDeletedAtAttribute($value) {
+      return date('d/m/Y H:i', strtotime($value));
+    }
 }
